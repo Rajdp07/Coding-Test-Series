@@ -1,0 +1,46 @@
+Given a number N, find the smallest number which can be obtained by rearranging the digits of N. The generated number should not have any leading zeroes.
+
+Example 1:
+
+Input: N = 846903
+Output:304689
+
+Example 2:
+
+Input: N = 55010
+Output:10055
+---------------------------------------------------------------------------------------------------------------------------
+
+class Solution
+{
+    public String smallestnum(String N)
+    {
+       //code here
+       int frequency[]=new int[20];
+       int i;
+       for(i=0;i<15;i++){
+           frequency[i]=0;
+       }
+       int number=N.length();
+       for(i=0;i<number;i++){
+           int temp = N.charAt(i) - '0';
+           frequency[temp]++;
+       }
+       i=1;
+       while(frequency[i]==0)
+       i++;
+       String str= "";
+       str +=String.valueOf(i);
+       frequency[i]--;
+       for(i=0;i<10;i++){
+           if(frequency[i]>0){
+               while(frequency[i]>0)
+               {
+                   str +=String.valueOf(i);
+                   frequency[i]--;
+               }
+           }
+       }
+       return str;
+    }
+}

@@ -1,0 +1,62 @@
+Given an undirected graph with V vertices and E edges. Every node has been assigned a value. The task is to find the connected chain with the maximum sum of values among all the connected components in the graph.
+
+Example 1:
+
+Input: 
+V = 7, E = 4 
+Values = {10, 25, 5, 15, 5, 20, 0} 
+Edges={ {1,2} ,{3,4}, {4,5} ,{6,7} }
+Output: 35
+Explanation: The graph looks like
+1     3      5       6
+|       \   /        |  
+2         4          7
+Component {1, 2} has Value {10, 25}: 
+sumValue = 10 + 25 = 35 
+
+Component {3, 4, 5}  has Value {5, 15, 5}: 
+sumValue = 5 + 15 + 5 = 25 
+
+Component {6, 7} has Value {20, 0}: 
+sumValue = 20 + 0 = 20 
+
+Max Sum value chain is {1, 2} with values 
+{10, 25}, hence 35 is the answer. 
+---------------------------------------------------------------------------------------------------------------------------
+
+class Solution{
+    List<List<Integer>> list;
+    int val[];
+    long helper(int node, int[] values){
+        long sum=values[node];
+        val[node]=1;
+        for(int i=0;i<list.get(node).size();i++){
+            if(val[list.get(node).get(i)]==0)
+            sum +=helper(list.get(node).get(i), values);
+        }
+        return sum;
+    }
+    long solve(int V,int E,int[] values,int[][] Edges){
+        //code here
+        long res=0;
+        list=new ArrayList<List<Integer>>();
+        for(int i=0;i<V;i++)
+        list.add(new ArrayList<Integer>());
+        val=new int[V];
+        Arrays.fill(val,0);
+        for(int i=0;i<E;i++){
+            Edges[i][0]-=1;
+            Edges[i][1]-=1;
+            list.get(Edges[i][0]).add(Edges[i][1]);
+            list.get(Edges[i][1]).add(Edges[i][0]);
+        }
+        for(int i=0;i<V;i++){
+            if(val[i]==0){
+                long call=helper(i,values);
+                if(res<call)
+                res=call;
+            }
+        }
+        return res;
+    }
+}

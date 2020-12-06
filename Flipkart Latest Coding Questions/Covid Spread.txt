@@ -1,0 +1,115 @@
+Aterp is the head nurse at city hospital. City hospital contains R*C number of wards and structure of hospital is in the form of a 2-D matrix.
+Given a matrix of dimension R*C where each cell in the matrix can have values 0, 1 or 2 which has the following meaning:
+0 : Empty ward
+1 : Cells have uninfected patients
+2 : Cells have infected patients
+
+An infected patient at ward [i,j] can infect other uninfected patient at indexes [i-1,j], [i+1,j], [i,j-1], [i,j+1] (up, down, left and right) in unit time. Help Aterp determine the minimum units of time after which there won't remain any uninfected patient i.e all patients would be infected. If all patients are not infected after infinite units of time then simply return -1.
+
+
+Example 1:
+
+Input:
+3 5
+2 1 0 2 1
+1 0 1 2 1
+1 0 0 2 1 
+Output:
+2
+
+Explanation:
+Patients at positions {0,0}, {0, 3}, {1, 3}
+and {2, 3} will infect patient at {0, 1}, 
+{1, 0},{0, 4}, {1, 2}, {1, 4}, {2, 4} during 1st 
+unit time. And, during 2nd unit time, patient at 
+{1, 0} will get infected and will infect patient 
+at {2, 0}. Hence, total 2 unit of time is required 
+to infect all patients.
+---------------------------------------------------------------------------------------------------------------------------
+
+
+class Solution{
+     public int helpaterp(int[][] hospital) {
+        // code here
+        int count=0;
+    
+    Queue<pair> q=new LinkedList<>();
+    
+    for(int i=0;i<hospital.length;i++)
+    {
+        for(int j=0;j<hospital[i].length;j++)
+        {
+            if(hospital[i][j]==2)
+                q.add(new pair(i,j,0));
+        }
+    }
+
+    int ans=0;
+    while(!q.isEmpty())
+    {
+        pair curr=q.poll();
+        int ni=curr.i;
+        int nj=curr.j;
+        int nlevel=curr.level;
+        int nexti=ni-1;
+        int nextj=nj;
+        if(isValid(nexti,nextj,hospital) && hospital[nexti][nextj]==1)
+        {
+            q.add(new pair(nexti,nextj,nlevel+1));
+            hospital[nexti][nextj]=2;
+        }
+        nexti=ni;
+        nextj=nj-1;
+        if(isValid(nexti,nextj,hospital) && hospital[nexti][nextj]==1)
+        {
+            q.add(new pair(nexti,nextj,nlevel+1));
+            hospital[nexti][nextj]=2;
+        }
+        nexti=ni+1;
+        nextj=nj;
+        if(isValid(nexti,nextj,hospital)&& hospital[nexti][nextj]==1)
+        {
+            q.add(new pair(nexti,nextj,nlevel+1));
+            hospital[nexti][nextj]=2;
+        }
+         nexti=ni;
+         nextj=nj+1;
+        if(isValid(nexti,nextj,hospital)&& hospital[nexti][nextj]==1)
+        {
+            q.add(new pair(nexti,nextj,nlevel+1));
+            hospital[nexti][nextj]=2;
+        }
+        ans=Math.max(ans,nlevel);
+    }
+    for(int i=0;i<hospital.length;i++)
+    {
+        for(int j=0;j<hospital[0].length;j++)
+        {
+            if(hospital[i][j]==1)
+                return -1;
+        }
+    }
+    return  ans;
+    
+}
+public class pair
+{
+    int i;
+    int j;
+    int level;
+    pair(int i,int j,int level)
+    {
+        this.i=i;
+        this.j=j;
+        this.level=level;
+    }
+}
+public boolean isValid(int i,int j,int hospital[][])
+{
+    if(i>=0 && i<hospital.length && j>=0 && j<hospital[0].length)
+        return true;
+    return false;
+}
+
+}
+    

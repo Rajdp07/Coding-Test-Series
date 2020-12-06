@@ -1,0 +1,62 @@
+Given two distinct words start and target, and a set denoting a dictionary of unique words of equal lengths. Find the length of the shortest transformation sequence from start to target.
+Keep the following conditions in mind:
+
+A word can only consist of lowercase characters.
+Only one letter can be changed in each transformation.
+Each transformed word must exist in the dictionary. 
+The starting word may not exist in the dictionary.
+Target will always be in the dictionary otherwise the path is not possible and you should return 0.
+
+Example 1:
+
+Input:
+D={"poon","plee","same","poie","plea","plie","poin"}
+start="toon"
+target="plea"
+Output: 7
+Explanation:
+The length of the smallest transformation sequence
+from toon to plea is 7 i.e. toon -> poon -> poin ->
+poie -> plie -> plee -> plea
+---------------------------------------------------------------------------------------------------------------------------
+
+
+public class Solution {
+    public int wordLadderLength(String start, String target, Set<String> D) {
+        // code here
+        if(!D.contains(target)){
+            return 0;
+        }
+        if(start.equals(target))
+        return 2;
+        Queue<String> q= new LinkedList<String>();
+        Queue<Integer> q1=new LinkedList<Integer>();
+        q.add(start);
+        q1.add(1);
+        while(!q.isEmpty())
+        {
+            String word =q.remove();
+            int steps=q1.remove();
+            if(word.equals(target)){
+                return steps;
+            }
+            char original[]=word.toCharArray();
+            for(int i=0;i<word.length();i++){
+                for(char c='a';c<='z';c++){
+                    char temp=original[i];
+                    if(original[i]!=c){
+                        original[i]=c;
+                    }
+                    String word2=new String(original);
+                    if(D.contains(word2)){
+                        q.add(word2);
+                        q1.add(steps+1);
+                        D.remove(word2);
+                    }
+                    original[i]=temp;
+                }
+            }
+        }
+        return 0;
+    }
+}
